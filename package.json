@@ -1,0 +1,29 @@
+{
+  "name": "bloxbuilt",
+  "version": "1.0.0",
+  "description": "BloxBuilt — a production-ready Discord bot for a Bloxburg house building service, using a private Discord channel as its persistent data store.",
+  "main": "index.js",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js",
+    "deploy": "node deploy-commands.js"
+  },
+  "keywords": [
+    "discord",
+    "discord.js",
+    "bloxburg",
+    "bot",
+    "bloxbuilt"
+  ],
+  "author": "BloxBuilt",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^14.16.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1"
+  }
+}
