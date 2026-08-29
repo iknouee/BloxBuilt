@@ -9,6 +9,13 @@
 // Primary brand colour (blueprint blue) used across all embeds.
 const BRAND_COLOR = 0x3b82f6;
 const BRAND_NAME = 'BloxBuilt';
+const WEBSITE_URL = 'https://bloxbuilt.xyz';
+
+// Default banner image shown on main embeds. Note: Discord CDN links expire —
+// prefer hosting the banner permanently (e.g. on the website) and updating it
+// with `/config banner <url>`. This default can be overridden at runtime.
+const DEFAULT_BANNER_URL =
+  'https://cdn.discordapp.com/attachments/1543249663434432542/1543260245671936011/banner.png';
 
 // Storage channel / category names created automatically on first startup.
 const STORAGE_CATEGORY_NAME = '🔒 BLOXBUILT SYSTEM';
@@ -124,6 +131,8 @@ const IDS = {
 module.exports = {
   BRAND_COLOR,
   BRAND_NAME,
+  WEBSITE_URL,
+  DEFAULT_BANNER_URL,
   STORAGE_CATEGORY_NAME,
   STORAGE_CHANNEL_NAME,
   STORAGE_MARKERS,

@@ -15,6 +15,8 @@ const {
 
 const {
   BRAND_COLOR,
+  WEBSITE_URL,
+  DEFAULT_BANNER_URL,
   ORDER_STATUS,
   SUPPORT_STATUS,
   INACTIVE_STATUSES,
@@ -24,6 +26,23 @@ const cache = require('../storage/cache');
 
 function base() {
   return new EmbedBuilder().setColor(BRAND_COLOR);
+}
+
+/**
+ * Resolve the banner URL: configured value wins, otherwise the default.
+ */
+function bannerUrl() {
+  return cache.getConfig()?.settings?.bannerUrl || DEFAULT_BANNER_URL;
+}
+
+/**
+ * A base embed with the BloxBuilt banner attached as the large image.
+ */
+function branded() {
+  const embed = base();
+  const url = bannerUrl();
+  if (url) embed.setImage(url);
+  return embed;
 }
 
 function statusOf(key) {
@@ -39,13 +58,13 @@ function statusText(key) {
 // Welcome
 // ---------------------------------------------------------------------------
 function welcomeEmbed(member) {
-  return base()
+  return branded()
     .setTitle('🏡 Welcome to BloxBuilt')
     .setDescription(
       `Welcome, ${member}!\n\n` +
-        'Get your dream Bloxburg home built quickly and easily.\n\n' +
-        '🏠 Browse our available builds\n' +
-        '🎟️ Open an order when you\'re ready\n' +
+        'BloxBuilt auto-builds Bloxburg houses for you.\n\n' +
+        `🌐 Browse builds at ${WEBSITE_URL}\n` +
+        '🎟️ Open an order and send us the Build ID\n' +
         '⭐ Check out our customer reviews',
     )
     .setTimestamp();
@@ -55,16 +74,16 @@ function welcomeEmbed(member) {
 // Order panel
 // ---------------------------------------------------------------------------
 function orderPanelEmbed() {
-  return base()
+  return branded()
     .setTitle('🏡 Order a BloxBuilt House')
     .setDescription(
-      'Choose one of our available builds, open an order and our team will help ' +
-        'get your new Bloxburg home built.\n\n' +
-        '**Before ordering:**\n' +
-        '🏠 Browse our available builds\n' +
-        '🔎 Find the Build ID you want\n' +
-        '💰 Make sure you have enough Bloxburg money\n' +
-        '🎮 Check the required gamepasses\n' +
+      `Find a build on ${WEBSITE_URL}, open an order and send us the Build ID — ` +
+        'our builder will hop onto your plot and auto-build it for you.\n\n' +
+        '**Before ordering, make sure you have:**\n' +
+        `🌐 A Build ID from ${WEBSITE_URL}\n` +
+        '💰 Enough Bloxburg money for the build\n' +
+        '🎮 The required gamepasses\n' +
+        '🤝 Ready to add our builder as co-owner on your plot\n\n' +
         '🎫 Open your order when you\'re ready',
     );
 }
@@ -307,6 +326,56 @@ function queueEmbed() {
 }
 
 // ---------------------------------------------------------------------------
+// Info panels: How It Works / Pricing / Rules
+// ---------------------------------------------------------------------------
+function howItWorksEmbed() {
+  return branded()
+    .setTitle('📖 How BloxBuilt Works')
+    .setDescription(
+      'BloxBuilt is an **auto-builder** — we build your chosen Bloxburg house ' +
+        'straight onto your plot.\n\n' +
+        `**1.** 🌐 Browse builds on our website: ${WEBSITE_URL}\n` +
+        '**2.** 🔎 Find a build you like and grab its **Build ID**\n' +
+        '**3.** 🎮 Make sure you own the **required gamepasses** for that build\n' +
+        '**4.** 💰 Have enough **Bloxburg money** for the build cost\n' +
+        '**5.** 🎫 Open an order here and send us the **Build ID**\n' +
+        '**6.** 🤝 Add our builder as **co-owner** on your plot\n' +
+        '**7.** 🏗️ We hop on and **auto-build** it for you\n' +
+        '**8.** ⭐ Leave a review when it\'s done!',
+    );
+}
+
+function pricingEmbed() {
+  return branded()
+    .setTitle('💰 BloxBuilt Pricing')
+    .setDescription(
+      '**Our building service is currently FREE!** 🎉\n\n' +
+        'You only need to cover the in-game costs yourself:\n\n' +
+        '💰 The **Bloxburg money** for the build\n' +
+        '🎮 The **required gamepasses** for that build\n\n' +
+        `Browse builds and grab a Build ID at ${WEBSITE_URL}, then open an order to get started.`,
+    );
+}
+
+function rulesEmbed() {
+  return branded()
+    .setTitle('📜 BloxBuilt Rules')
+    .setDescription(
+      'Please follow these rules so we can build your home smoothly.\n\n' +
+        '**1.** Be respectful to staff and other members.\n' +
+        '**2.** Only order builds using a valid **Build ID** from ' +
+        `${WEBSITE_URL}.\n` +
+        '**3.** Make sure you own the **required gamepasses** before ordering.\n' +
+        '**4.** Have enough **Bloxburg money** ready for the build.\n' +
+        '**5.** Add our builder as **co-owner** when asked, and remove them after.\n' +
+        '**6.** One active order per person at a time.\n' +
+        '**7.** No scamming, no spamming, no advertising.\n' +
+        '**8.** Use order tickets for orders and support tickets for help.\n\n' +
+        'Breaking these rules may result in your order being cancelled.',
+    );
+}
+
+// ---------------------------------------------------------------------------
 // Generic notice embeds
 // ---------------------------------------------------------------------------
 function noticeEmbed(title, description, color) {
@@ -318,6 +387,8 @@ function noticeEmbed(title, description, color) {
 
 module.exports = {
   base,
+  branded,
+  bannerUrl,
   statusText,
   welcomeEmbed,
   orderPanelEmbed,
@@ -332,5 +403,8 @@ module.exports = {
   supportTicketEmbed,
   supportTicketComponents,
   queueEmbed,
+  howItWorksEmbed,
+  pricingEmbed,
+  rulesEmbed,
   noticeEmbed,
 };

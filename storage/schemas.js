@@ -57,6 +57,8 @@ function normalizeConfig(raw) {
     roles: isObject(raw.roles) ? raw.roles : {},
     settings: {
       autoVerify: Boolean(raw.settings?.autoVerify),
+      bannerUrl:
+        raw.settings?.bannerUrl != null ? String(raw.settings.bannerUrl) : '',
     },
   };
 }

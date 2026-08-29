@@ -85,6 +85,17 @@ const data = new SlashCommandBuilder()
         o.setName('enabled').setDescription('Enable auto verify').setRequired(true),
       ),
   )
+  .addSubcommand((sub) =>
+    sub
+      .setName('banner')
+      .setDescription('Set the banner image URL used on embeds')
+      .addStringOption((o) =>
+        o
+          .setName('url')
+          .setDescription('Direct image URL (leave blank to reset to default)')
+          .setRequired(false),
+      ),
+  )
   .addSubcommand((sub) => sub.setName('view').setDescription('View current configuration'));
 
 async function execute(interaction, client) {
@@ -147,6 +158,31 @@ async function execute(interaction, client) {
     await logAction(client, 'Config Updated', `Auto-verify **${enabled ? 'enabled' : 'disabled'}**.`);
     return interaction.reply({
       content: `✅ Auto-verify ${enabled ? 'enabled' : 'disabled'}.`,
+      flags: MessageFlags.Ephemeral,
+    });
+  }
+
+  if (sub === 'banner') {
+    const url = interaction.options.getString('url') || '';
+    if (url && !/^https?:\/\//i.test(url)) {
+      return interaction.reply({
+        content: '⚠️ Please provide a valid image URL starting with http(s)://',
+        flags: MessageFlags.Ephemeral,
+      });
+    }
+    config.settings.bannerUrl = url;
+    const ok = await storage.saveConfig(client);
+    if (!ok) {
+      return interaction.reply({
+        content: '⚠️ Failed to save configuration to storage.',
+        flags: MessageFlags.Ephemeral,
+      });
+    }
+    await logAction(client, 'Config Updated', url ? 'Banner URL set.' : 'Banner reset to default.');
+    return interaction.reply({
+      content: url
+        ? `✅ Banner image updated.\n\n> Tip: Discord CDN links expire. Host the image on your website for a permanent banner.`
+        : '✅ Banner reset to the default image.',
       flags: MessageFlags.Ephemeral,
     });
   }
