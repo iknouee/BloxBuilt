@@ -1,16 +1,20 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
   title: 'BloxBuilt — Bloxburg Build Gallery',
   description:
     'Browse Bloxburg house builds and grab a Build ID. BloxBuilt auto-builds your dream home.',
-  themeColor: '#0b1120',
   openGraph: {
     title: 'BloxBuilt — Bloxburg Build Gallery',
     description: 'Browse Bloxburg house builds and grab a Build ID.',
     type: 'website',
   },
+};
+
+// Next 14 wants themeColor in a viewport export, not metadata.
+export const viewport: Viewport = {
+  themeColor: '#0b1120',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
