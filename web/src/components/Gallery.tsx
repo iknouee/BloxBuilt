@@ -37,6 +37,7 @@ export default function Gallery() {
     if (!q) return builds;
     return builds.filter(
       (b) =>
+        b.id.toLowerCase().includes(q) ||
         b.name.toLowerCase().includes(q) ||
         b.category.toLowerCase().includes(q) ||
         b.description.toLowerCase().includes(q) ||
@@ -51,7 +52,7 @@ export default function Gallery() {
           <span className="icon">🔍</span>
           <input
             type="text"
-            placeholder="Search builds, categories, gamepasses…"
+            placeholder="Search by name, Build ID, category, gamepass…"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
