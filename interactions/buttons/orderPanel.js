@@ -92,17 +92,12 @@ function register(router) {
   });
 
   // "Order This Build" button on a listing — build ID embedded in custom ID.
+  // Build IDs are sourced externally, so we don't require the build to still
+  // exist in local storage; we just carry the ID straight into the order.
   router.button(IDS.BUILD_ORDER, async (interaction, client, parts) => {
     const buildId = parts.slice(2).join(':');
-    const build = cache.findActiveBuild(buildId);
-    if (!build) {
-      return interaction.reply({
-        content: '⚠️ That build is no longer available.',
-        flags: MessageFlags.Ephemeral,
-      });
-    }
     if (!(await ensureCanOrder(interaction))) return;
-    await interaction.showModal(orderModal(build.id));
+    await interaction.showModal(orderModal(buildId));
   });
 
   // "Order Support" button.

@@ -45,13 +45,15 @@ function register(router) {
       gamepasses = '';
     }
 
+    // Build IDs are sourced externally (from our website), so we accept
+    // whatever the customer enters without validating against a local
+    // catalogue. If they came from an "Order This Build" button the ID is
+    // taken from the button; otherwise it's their free-text input.
     const buildId = (buildIdFromCustomId || interaction.fields.getTextInputValue('buildId')).trim();
 
-    // Validate build ID against stored builds.
-    const build = cache.findActiveBuild(buildId);
-    if (!build) {
+    if (!buildId) {
       return interaction.reply({
-        content: `⚠️ \`${buildId}\` is not a valid available Build ID. Check the available builds and try again.`,
+        content: '⚠️ Please provide a Build ID.',
         flags: MessageFlags.Ephemeral,
       });
     }
@@ -65,7 +67,7 @@ function register(router) {
       displayId: `#${String(orderId).padStart(4, '0')}`,
       customerId: interaction.user.id,
       robloxUsername: roblox,
-      buildId: build.id,
+      buildId,
       budget,
       gamepasses,
       availability,
@@ -113,16 +115,16 @@ function register(router) {
       if (ch && ch.isTextBased()) {
         await ch
           .send({
-            content: `📥 New order ${order.displayId} — ${build.id} by <@${order.customerId}> → ${ticket.channel}`,
+            content: `📥 New order ${order.displayId} — ${buildId} by <@${order.customerId}> → ${ticket.channel}`,
           })
           .catch(() => {});
       }
     }
 
-    await logAction(client, 'Order Created', `${order.displayId} — ${build.id}`, {
+    await logAction(client, 'Order Created', `${order.displayId} — ${buildId}`, {
       fields: [
         { name: 'Customer', value: `<@${order.customerId}>`, inline: true },
-        { name: 'Build', value: build.id, inline: true },
+        { name: 'Build', value: buildId, inline: true },
         { name: 'Ticket', value: `${ticket.channel}`, inline: true },
       ],
     });
