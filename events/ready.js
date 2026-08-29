@@ -57,8 +57,13 @@ module.exports = {
 
     logger.info('BloxBuilt is ready.');
 
-    // Set a simple presence.
-    client.user.setActivity('🏡 Bloxburg builds', { type: 3 }).catch(() => {});
+    // Set a simple presence. setActivity is synchronous in discord.js v14, so
+    // guard it with try/catch rather than a Promise .catch().
+    try {
+      client.user.setActivity('🏡 Bloxburg builds', { type: 3 });
+    } catch (err) {
+      logger.warn('Failed to set activity:', err?.message || err);
+    }
     // Expose readiness for /health accuracy.
     cache.setStorageReady(true);
   },
