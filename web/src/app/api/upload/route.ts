@@ -33,6 +33,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Image is too large (max 8 MB).' }, { status: 400 });
     }
 
+    // Surface a clear message if Blob isn't wired up yet (most common cause).
+    if (!process.env.BLOB_READ_WRITE_TOKEN) {
+      return NextResponse.json(
+        {
+          error:
+            'Image storage is not connected. Create a Vercel Blob store, connect it to this project, then redeploy.',
+        },
+        { status: 500 },
+      );
+    }
+
     const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
     const blob = await put(`builds/${Date.now()}-${safeName}`, file, {
       access: 'public',
@@ -41,6 +52,8 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ url: blob.url });
   } catch (err) {
-    return NextResponse.json({ error: 'Upload failed.' }, { status: 500 });
+    // Return the underlying reason so failures are diagnosable in the admin UI.
+    const message = err instanceof Error ? err.message : 'Upload failed.';
+    return NextResponse.json({ error: `Upload failed: ${message}` }, { status: 500 });
   }
 }
