@@ -52,17 +52,49 @@ export async function listBuilds(): Promise<Build[]> {
   return builds.filter((b): b is Build => Boolean(b));
 }
 
+/**
+ * Normalize a user-supplied Build ID into a safe, consistent key. Keeps
+ * letters/numbers/dash/underscore, trims, caps length. Returns '' if nothing
+ * usable remains.
+ */
+export function normalizeId(raw: string): string {
+  return String(raw ?? '')
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-zA-Z0-9._-]/g, '')
+    .slice(0, 40);
+}
+
 /** Fetch a single build by id. */
 export async function getBuild(id: string): Promise<Build | null> {
   const build = await kv.get<Build>(buildKey(id));
   return build ?? null;
 }
 
-/** Create a new build. */
+/**
+ * Create a new build. If `input.id` is provided it is used as the Build ID
+ * (normalized); otherwise one is generated. Throws with code 'DUPLICATE' if a
+ * build with that id already exists.
+ */
 export async function createBuild(input: BuildInput): Promise<Build> {
   const clean = sanitizeInput(input);
+
+  let id = normalizeId(input.id ?? '');
+  if (id) {
+    const existing = await getBuild(id);
+    if (existing) {
+      const err = new Error(`A build with ID "${id}" already exists.`);
+      (err as Error & { code?: string }).code = 'DUPLICATE';
+      throw err;
+    }
+  } else {
+    // Generate a unique id (avoid the tiny chance of a collision).
+    do {
+      id = generateId();
+    } while (await getBuild(id));
+  }
+
   const now = new Date().toISOString();
-  const id = generateId();
   const build: Build = {
     id,
     ...clean,

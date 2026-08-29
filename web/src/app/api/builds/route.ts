@@ -35,6 +35,9 @@ export async function POST(req: NextRequest) {
     postBuildToDiscord(build).catch(() => {});
     return NextResponse.json({ build }, { status: 201 });
   } catch (err) {
+    if (err instanceof Error && (err as Error & { code?: string }).code === 'DUPLICATE') {
+      return NextResponse.json({ error: err.message }, { status: 409 });
+    }
     return NextResponse.json({ error: 'Failed to create build.' }, { status: 500 });
   }
 }

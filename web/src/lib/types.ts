@@ -31,8 +31,10 @@ export interface Build {
   updatedAt: string;
 }
 
-/** Payload accepted when creating/updating a build (id/timestamps handled server-side). */
+/** Payload accepted when creating/updating a build (timestamps handled server-side). */
 export interface BuildInput {
+  /** Optional custom Build ID. If omitted on create, one is generated. */
+  id?: string;
   name: string;
   description: string;
   category: string;
