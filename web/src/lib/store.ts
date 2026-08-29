@@ -106,19 +106,50 @@ export async function createBuild(input: BuildInput): Promise<Build> {
   return build;
 }
 
-/** Update an existing build. Returns null if it doesn't exist. */
+/**
+ * Update an existing build. Returns null if it doesn't exist.
+ *
+ * The Build ID can be changed: if `input.id` is provided and differs from the
+ * current id, the record is moved to the new key (`build:<newId>`) and the
+ * index is updated, preserving its original position. Throws with code
+ * 'DUPLICATE' if the new id is already taken by another build.
+ */
 export async function updateBuild(id: string, input: BuildInput): Promise<Build | null> {
   const existing = await getBuild(id);
   if (!existing) return null;
   const clean = sanitizeInput(input);
+
+  const requestedId = normalizeId(input.id ?? '');
+  const newId = requestedId && requestedId !== id ? requestedId : id;
+
+  if (newId !== id) {
+    const clash = await getBuild(newId);
+    if (clash) {
+      const err = new Error(`A build with ID "${newId}" already exists.`);
+      (err as Error & { code?: string }).code = 'DUPLICATE';
+      throw err;
+    }
+  }
+
   const build: Build = {
     ...existing,
     ...clean,
-    id: existing.id,
+    id: newId,
     createdAt: existing.createdAt,
     updatedAt: new Date().toISOString(),
   };
-  await kv.set(buildKey(id), build);
+
+  if (newId === id) {
+    await kv.set(buildKey(id), build);
+    return build;
+  }
+
+  // Rename: preserve the original ordering score, write new key, drop old.
+  const score = await kv.zscore(INDEX_KEY, id);
+  await kv.set(buildKey(newId), build);
+  await kv.zadd(INDEX_KEY, { score: typeof score === 'number' ? score : Date.now(), member: newId });
+  await kv.del(buildKey(id));
+  await kv.zrem(INDEX_KEY, id);
   return build;
 }
 

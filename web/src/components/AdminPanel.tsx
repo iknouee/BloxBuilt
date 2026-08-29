@@ -140,8 +140,8 @@ export default function AdminPanel({ apiKey }: { apiKey: string }) {
 
   function buildPayload(): BuildInput {
     return {
-      // Only send a custom id when creating; the id can't change on edit.
-      ...(editingId ? {} : { id: draft.customId.trim() || undefined }),
+      // Custom id is honored on both create and edit (edit renames the build).
+      id: draft.customId.trim() || undefined,
       name: draft.name.trim(),
       description: draft.description.trim(),
       category: draft.category.trim(),
@@ -212,16 +212,15 @@ export default function AdminPanel({ apiKey }: { apiKey: string }) {
 
         <div className="form-grid">
           <div className="field full">
-            <label>Build ID {editingId ? '(locked)' : '(optional)'}</label>
+            <label>Build ID {editingId ? '' : '(optional)'}</label>
             <input
               value={draft.customId}
               onChange={(e) => setDraft({ ...draft, customId: e.target.value })}
               placeholder="e.g. BB-001 — leave blank to auto-generate"
-              disabled={!!editingId}
             />
             <span className="hint">
               {editingId
-                ? "The Build ID can't be changed after creation."
+                ? 'Change this to rename the Build ID. Customers will need the new ID afterwards. Letters, numbers, - and _ only.'
                 : 'This is what customers copy into the Discord bot. Letters, numbers, - and _ only.'}
             </span>
           </div>

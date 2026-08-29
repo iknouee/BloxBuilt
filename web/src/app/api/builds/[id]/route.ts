@@ -28,6 +28,9 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     if (!build) return NextResponse.json({ error: 'Not found.' }, { status: 404 });
     return NextResponse.json({ build });
   } catch (err) {
+    if (err instanceof Error && (err as Error & { code?: string }).code === 'DUPLICATE') {
+      return NextResponse.json({ error: err.message }, { status: 409 });
+    }
     return NextResponse.json({ error: 'Failed to update build.' }, { status: 500 });
   }
 }
