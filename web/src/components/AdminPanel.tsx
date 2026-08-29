@@ -319,11 +319,17 @@ export default function AdminPanel({ apiKey }: { apiKey: string }) {
             </span>
             {draft.images.length ? (
               <div className="img-tray">
-                {draft.images.map((url) => (
-                  <div className="item" key={url}>
+                {draft.images.map((url, i) => (
+                  <div className={`item ${i === 0 ? 'cover' : ''}`} key={url}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={url} alt="upload" />
-                    <button type="button" onClick={() => removeImage(url)} aria-label="Remove image">
+                    {i === 0 ? <span className="cover-tag">Cover</span> : null}
+                    <button
+                      type="button"
+                      className="x"
+                      onClick={() => removeImage(url)}
+                      aria-label="Remove image"
+                    >
                       ✕
                     </button>
                   </div>

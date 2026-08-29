@@ -37,6 +37,7 @@ export default function BuildCard({
         ) : (
           <div className="placeholder">🏠</div>
         )}
+        {build.category ? <span className="badge-cat">{build.category}</span> : null}
         {gpCount > 0 ? (
           <span className="badge-gp">
             {gpCount} Gamepass{gpCount === 1 ? '' : 'es'}
@@ -46,8 +47,10 @@ export default function BuildCard({
       <div className="card-body">
         <h3>{build.name}</h3>
         {build.description ? <p className="desc">{build.description}</p> : <p className="desc" />}
-        <div className="price-cash">{formatCash(build.cashPrice)}</div>
-        <div className="price-bbx">{formatBlockbux(build.blockbux)}</div>
+        <div className="price-row">
+          <span className="price-cash">{formatCash(build.cashPrice)}</span>
+          <span className="price-bbx">{formatBlockbux(build.blockbux)}</span>
+        </div>
       </div>
     </article>
   );

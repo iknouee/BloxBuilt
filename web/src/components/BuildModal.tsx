@@ -75,17 +75,13 @@ export default function BuildModal({ build, onClose }: { build: Build; onClose: 
             </div>
 
             <div className="price-box">
-              <div>
-                <span className="k">Cash Price:</span>{' '}
-                <span className="price-cash" style={{ fontSize: 14 }}>
-                  {formatCash(build.cashPrice)}
-                </span>
+              <div className="pr">
+                <span className="k">Cash Price</span>
+                <span className="price-cash">{formatCash(build.cashPrice)}</span>
               </div>
-              <div>
-                <span className="k">Blockbux:</span>{' '}
-                <span className="price-bbx" style={{ fontSize: 14 }}>
-                  {formatBlockbux(build.blockbux)}
-                </span>
+              <div className="pr">
+                <span className="k">Blockbux</span>
+                <span className="price-bbx">{formatBlockbux(build.blockbux)}</span>
               </div>
             </div>
 

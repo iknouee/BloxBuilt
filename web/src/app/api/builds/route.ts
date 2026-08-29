@@ -7,6 +7,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { listBuilds, createBuild } from '@/lib/store';
 import { isAuthorizedWrite } from '@/lib/auth';
+import { postBuildToDiscord } from '@/lib/discord';
 import type { BuildInput } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
@@ -30,6 +31,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Name is required.' }, { status: 400 });
     }
     const build = await createBuild(body);
+    // Best-effort: announce the new build in Discord. Never blocks the save.
+    postBuildToDiscord(build).catch(() => {});
     return NextResponse.json({ build }, { status: 201 });
   } catch (err) {
     return NextResponse.json({ error: 'Failed to create build.' }, { status: 500 });

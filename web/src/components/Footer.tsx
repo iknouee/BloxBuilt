@@ -2,7 +2,8 @@ export default function Footer() {
   return (
     <footer className="site-footer">
       <div className="container">
-        © {new Date().getFullYear()} BloxBuilt · Bloxburg house building service
+        <span className="brand-sm">BloxBuilt</span> · Bloxburg house building service ·{' '}
+        © {new Date().getFullYear()}
       </div>
     </footer>
   );
