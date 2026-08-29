@@ -90,6 +90,13 @@ function orderPanelEmbed() {
 
 function orderPanelComponents() {
   const row = new ActionRowBuilder().addComponents(
+    // Link button — opens the website directly. No custom ID needed and it
+    // always works (never routed through the bot).
+    new ButtonBuilder()
+      .setLabel('Browse Builds')
+      .setEmoji('🌐')
+      .setStyle(ButtonStyle.Link)
+      .setURL(WEBSITE_URL),
     new ButtonBuilder()
       .setCustomId(IDS.ORDER_CREATE)
       .setLabel('Order a Build')
