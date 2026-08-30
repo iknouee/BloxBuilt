@@ -83,6 +83,7 @@ function orderPanelEmbed() {
         `🌐 A Build ID from ${WEBSITE_URL}\n` +
         '💰 Enough Bloxburg money for the build\n' +
         '🎮 The required gamepasses\n' +
+        '📨 **5 invites required**\n' +
         '🤝 Ready to add our builder as co-owner on your plot\n\n' +
         '🎫 Open your order when you\'re ready',
     );
@@ -345,10 +346,11 @@ function howItWorksEmbed() {
         '**2.** 🔎 Find a build you like and grab its **Build ID**\n' +
         '**3.** 🎮 Make sure you own the **required gamepasses** for that build\n' +
         '**4.** 💰 Have enough **Bloxburg money** for the build cost\n' +
-        '**5.** 🎫 Open an order here and send us the **Build ID**\n' +
-        '**6.** 🤝 Add our builder as **co-owner** on your plot\n' +
-        '**7.** 🏗️ We hop on and **auto-build** it for you\n' +
-        '**8.** ⭐ Leave a review when it\'s done!',
+        '**5.** 📨 **5 invites required** before ordering\n' +
+        '**6.** 🎫 Open an order here and send us the **Build ID**\n' +
+        '**7.** 🤝 Add our builder as **co-owner** on your plot\n' +
+        '**8.** 🏗️ We hop on and **auto-build** it for you\n' +
+        '**9.** ⭐ Leave a review when it\'s done!',
     );
 }
 
@@ -357,6 +359,7 @@ function pricingEmbed() {
     .setTitle('💰 BloxBuilt Pricing')
     .setDescription(
       '**Our building service is currently FREE!** 🎉\n\n' +
+        '📨 **5 invites required** to use the building service.\n\n' +
         'You only need to cover the in-game costs yourself:\n\n' +
         '💰 The **Bloxburg money** for the build\n' +
         '🎮 The **required gamepasses** for that build\n\n' +
@@ -374,10 +377,11 @@ function rulesEmbed() {
         `${WEBSITE_URL}.\n` +
         '**3.** Make sure you own the **required gamepasses** before ordering.\n' +
         '**4.** Have enough **Bloxburg money** ready for the build.\n' +
-        '**5.** Add our builder as **co-owner** when asked, and remove them after.\n' +
-        '**6.** One active order per person at a time.\n' +
-        '**7.** No scamming, no spamming, no advertising.\n' +
-        '**8.** Use order tickets for orders and support tickets for help.\n\n' +
+        '**5.** 📨 **5 invites required** before placing an order.\n' +
+        '**6.** Add our builder as **co-owner** when asked, and remove them after.\n' +
+        '**7.** One active order per person at a time.\n' +
+        '**8.** No scamming, no spamming, no advertising.\n' +
+        '**9.** Use order tickets for orders and support tickets for help.\n\n' +
         'Breaking these rules may result in your order being cancelled.',
     );
 }
